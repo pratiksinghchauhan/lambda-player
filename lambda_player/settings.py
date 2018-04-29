@@ -48,6 +48,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'social_django.middleware.SocialAuthExceptionMiddleware',
 ]
 
 ROOT_URLCONF = 'lambda_player.urls'
@@ -63,10 +65,21 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+
+                'social_django.context_processors.backends',  # <--
+                'social_django.context_processors.login_redirect', # <--
             ],
         },
     },
 ]
+
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.github.GithubOAuth2',
+    'social_core.backends.twitter.TwitterOAuth',
+    'social_core.backends.facebook.FacebookOAuth2',
+
+    'django.contrib.auth.backends.ModelBackend',
+)
 
 WSGI_APPLICATION = 'lambda_player.wsgi.application'
 
@@ -119,3 +132,14 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
+
+LOGIN_URL = 'login'
+LOGOUT_URL = 'logout'
+LOGIN_REDIRECT_URL = '/'
+
+SOCIAL_AUTH_GITHUB_KEY = '465f474aa426d8e17109'
+SOCIAL_AUTH_GITHUB_SECRET = '3be75ee675f239f178712abd04efca5d20fe40c4'
+
+SOCIAL_AUTH_TWITTER_KEY = '2Ya9bAIAYfsAH4OIYx0NO41tJ'
+SOCIAL_AUTH_TWITTER_SECRET = 'vRJbSslohkxfQ5Qj9AGpGZm2UbBXjkUm9eoOUpFdH2CtdwY68n'
+
