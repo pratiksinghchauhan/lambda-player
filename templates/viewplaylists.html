@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+    .playlist-creation-form{
+        padding-top: 100px;
+    }
+    .create-button{
+        background-color: black;
+    }
+    .create-button:hover{
+        background-color: grey;
+    }
+</style>
+
+<div class="container">
+
+    <form method="POST" action="" class="playlist-creation-form">
+        {% csrf_token %}
+        Playlist Name: <input type="text" name="playlistname" class="form-control"><br>
+        Album Art: <input type="text" name="albumart" class="form-control"><br>
+        <button type="submit" class="btn btn-success create-button"><span class="glyphicon glyphicon-plus"></span>&nbspCreate</button>
+    </form>
+
+    <h2> Your Playlists: </h2>
+
+    {% if ownplaylists %}
+        
+            <div id="ownplaylists">
+                {{ownplaylists|safe}}
+
+            </div>
+           
+    {% else %}
+        <p style="text-align: center"> Start by creating a playlist from above</p>
+    {% endif %}
+
+    <h2> Shared Playlists: </h2>
+    
+    {% if sharedplaylists %}
+        {% for sharedsongs in sharedplaylists %}
+            {{ sharedsongs }}
+        {% endfor %}
+    
+    {% else %}
+        <p style="text-align: center"> No Playlists has been shared with you</p>
+    {% endif %}
+</div>
+{% endblock %}
