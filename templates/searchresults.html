@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+    .searchres{
+        padding-top: 90px;
+    }
+</style>
+
+<div class="container searchres">
+        <h2>Search Results for the Query : {{query}}</h2>
+        <ul class="list-group">
+
+            {% for res in results %}
+                <li class="list-group-item"> <img class="img-thumbnail searchimage"  src="{{res.snippet.thumbnails.high.url}}" alt="image" height="100" width="100">{{ res.snippet.title }} <br> {{ res.snippet.description }}</li>
+            {% endfor %}
+
+        </ul>
+</div>
+
+{% endblock %}

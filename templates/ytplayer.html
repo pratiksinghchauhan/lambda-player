@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+      <style>
+          .ytplayer{
+            padding-top: 90px;
+          }
+      </style>
+
+       <div class="container ytplayer">
+            <div id="player"></div>
+        </div>
+
+
+        <script>
+            var tag = document.createElement('script');
+            tag.src = "http://www.youtube.com/player_api";
+            var firstScriptTag = document.getElementsByTagName('script')[0];
+            firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+            var done = false;
+            var player;
+            function onYouTubePlayerAPIReady() {
+                player = new YT.Player('player', {
+                  height: '780',
+                  width: '1280',
+                  videoId: 'JW5meKfy3fY',
+                  events: {
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange
+                  }
+                });
+            }
+            function onPlayerReady(evt) {
+                evt.target.playVideo();
+            }
+            function onPlayerStateChange(evt) {
+                /*if (evt.data == YT.PlayerState.PLAYING && !done) {
+                    setTimeout(stopVideo, 6000);
+                    done = true;
+                }*/
+            }
+            function stopVideo() {
+                player.stopVideo();
+            }
+            
+            function loadVideo(videoID) {
+              console.log(videoID);
+              if(player) { player.loadVideoById(videoID); }
+            }
+            
+        </script>
+            
+
+{% endblock %}
