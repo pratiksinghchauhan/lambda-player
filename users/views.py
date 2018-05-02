@@ -1,6 +1,6 @@
 from django.shortcuts import render
 import argparse
-from .models import playlists
+from .models import playlists,playlistsongs
 
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
@@ -29,9 +29,6 @@ def youtube_search(query,max_results):
 
     return search_response
 
-    videos = []
-    channels = []
-    playlists = []
 
 
 
@@ -56,7 +53,6 @@ def playlists_view(request):
         print(request.user)
         newEnty = playlists(userdetails = request.user, playlistname = playlistName, albumart = albumArt)
         newEnty.save()
-        
     
     ownplaylist = playlists.objects.filter(userdetails = request.user, playlisttype = "CREATED")
     print ownplaylist
@@ -66,7 +62,7 @@ def playlists_view(request):
         closed =False
         if(i%4 == 0 ):
            ownsongdata = ownsongdata + '<div class = "row">'
-        ownsongdata  = ownsongdata +'<div class = "col-md-3 ">' + '<figure> <img class="albumart" src="'+data.albumart+'" alt= "albumart"><figcaption><h3>' + data.playlistname + '</h3></figcaption></figure></div>'
+        ownsongdata  = ownsongdata +'<div class = "col-md-3 ">' + '<a href = "/insideplaylist/'+ str(data.id) +'"> <figure> <img class="albumart" src="'+data.albumart+'" alt= "albumart"><figcaption><h3>' + data.playlistname + '</h3></figcaption></figure></a></div>'
         if(i%4 == 3 ):
             ownsongdata = ownsongdata + '</div><br>'
             closed = True
@@ -82,3 +78,25 @@ def playlists_view(request):
     return render(request,'viewplaylists.html',{"ownplaylists":ownsongdata, "sharedplaylists": sharedplaylist})
 
 
+def showplaylistcontent(request,offset):
+    if request.method == 'POST' and 'newsong' in request.POST:
+        newsong = request.POST.get("newsong")
+        songaddto = playlists.objects.get(id = offset)
+        searchsong = youtube_search(newsong,1)
+        print searchsong['items'][0]['id']['videoId']
+
+        newEnty = playlistsongs(userdetails = request.user, playlist = songaddto, url = newsong, albumart = searchsong['items'][0]['snippet']['thumbnails']['high']['url'], songname = searchsong['items'][0]['snippet']['title'] ,videoid = searchsong['items'][0]['id']['videoId'])
+        newEnty.save()
+    
+    if request.method == 'POST' and 'shareduser' in request.POST:
+        shareduser = request.POST.get('shareduser')
+        shareduserobj = User.objects.get(username = shareduser)
+        sharedplaylist = playlists.objects.get(id = offset)
+        newEnty = playlists(userdetails = request.user, playlistname = sharedplaylist.playlistname, albumart = sharedplaylist.albumart, playlisttype = 'SHARED')
+        newEnty.save()
+
+    selectedplaylist = playlists.objects.get(id = offset)    
+    songs = playlistsongs.objects.filter(userdetails = request.user, playlist = selectedplaylist)
+
+
+    return render(request,"showplaylistcontent.html", {"songs": songs, "playlistid":offset} )

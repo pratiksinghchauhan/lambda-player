@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+        .playlist-creation-form{
+            padding-top: 100px;
+        }
+</style>
+
+<div class="container">
+
+        <form method="POST" action="" class="playlist-creation-form">
+            {% csrf_token %}
+            Share this playlist with:
+            <input placeholder="Please enter a correct username" type="text" name="shareduser" class="form-control"><br>
+            <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span>&nbspCreate</button>
+        </form>
+
+        <br>
+
+        <form method="POST" action="">
+                {% csrf_token %}
+                Add a new song:
+                <input placeholder="Youtube Video link:" type="text" name="newsong" class="form-control"><br>
+                <button type="submit" class="btn btn-success "><span class="glyphicon glyphicon-plus"></span>&nbspAdd</button>
+        </form>
+
+
+
+        {% if message %}
+
+            <h3>{{message}}</h3>
+
+        {% endif %}
+
+        <h2> Playlist Content:
+
+        
+       <a href="/play/{{playlistid}}">
+        <button type="button" class="btn btn-default">
+            <span class="glyphicon glyphicon-play-circle"></span> Play
+          </button>
+        </a>
+        </h2>
+
+        <br>
+
+        
+        
+        {% for song in songs %}
+            <li class="list-group-item"> <img class="img-thumbnail searchimage"  src="{{song.albumart}}" alt="image" height="100" width="100">{{ song.songname }} <br> {{ res.snippet.description }}</li>
+        {% endfor %}
+
+</div>
+
+{% endblock %}
