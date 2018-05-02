@@ -14,23 +14,37 @@
 
 
         <script>
-            console.log("{{videoId}}");
+            var vid = "{{videoId|safe}}";
+            console.log(typeof(vid));
+
+            vid = vid.replace("u'", "'");
+            var videoId = vid.split(",");
+            console.log(typeof(videoId));
+            console.log("VideoId: \n");
+            
+            var firstvid = videoId[0];
+            videoId.shift();
+            videoId.pop();
+            console.log(videoId);
+
             var tag = document.createElement('script');
             tag.src = "http://www.youtube.com/player_api";
             var firstScriptTag = document.getElementsByTagName('script')[0];
             firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
             var done = false;
             var player;
+            var player;
             function onYouTubePlayerAPIReady() {
-                player = new YT.Player('player', {
-                  height: '780',
-                  width: '1280',
-                  videoId: '{{videoId}}',
-                  events: {
-                    'onReady': onPlayerReady,
-                    'onStateChange': onPlayerStateChange
-                  }
-                });
+            player = new YT.Player('player', {
+            height: '390',
+            width: '640',
+            videoId: firstvid,
+            playerVars: { 'autoplay': 1, 'controls': 1, 'playlist':videoId},
+            events: {
+                'onReady': onPlayerReady,
+                'onStateChange': onPlayerStateChange
+            }
+            });
             }
             function onPlayerReady(evt) {
                 evt.target.playVideo();
@@ -49,6 +63,7 @@
               console.log(videoID);
               if(player) { player.loadVideoById(videoID); }
             }
+            
             
         </script>
             

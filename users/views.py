@@ -100,3 +100,13 @@ def showplaylistcontent(request,offset):
 
 
     return render(request,"showplaylistcontent.html", {"songs": songs, "playlistid":offset} )
+
+def playaplaylist(request,offset):
+    playlist = playlists.objects.get(id = offset)
+    songs = playlistsongs.objects.filter(userdetails = request.user, playlist = playlist)
+    videoId = ''
+    for song in songs:
+        videoId = videoId + song.videoid + ','
+    print videoId
+    return render(request,"ytplayer.html", {"songs": songs, "videoId":videoId} )
+
