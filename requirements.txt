@@ -1,0 +1,13 @@
+Django==1.10.5
+django-allauth==0.30.0
+django-social-auth==0.7.28
+django-social-share==1.1.1
+django-storages==1.5.2
+django-tinymce==2.6.0
+djangorestframework==3.6.3
+oauth2==1.9.0.post1
+oauth2client==4.1.2
+requests==2.13.0
+social-auth-app-django==2.1.0
+virtualenv==15.1.0
+whitenoise==3.3.1
