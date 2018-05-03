@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
-from users.views import home,youtubesearch,ytplayer,playlists_view,showplaylistcontent,playaplaylist
+from users.views import home,youtubesearch,ytplayer,playlists_view,showplaylistcontent,playaplaylist,playinbuiltplaylist
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [
@@ -27,6 +27,7 @@ urlpatterns = [
     url(r'^youtubesearch$', youtubesearch),
     url(r'^playback/(.*)$', ytplayer),
     url(r'^play/(.*)$', playaplaylist),
+    url(r'^playinbuilt/(.*)$', playinbuiltplaylist),
     
     url(r'^playlists/$', playlists_view),
     url(r'^insideplaylist/(.*)$', showplaylistcontent),

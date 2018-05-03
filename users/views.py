@@ -30,6 +30,9 @@ def youtube_search(query,max_results):
     return search_response
 
 
+def playinbuiltplaylist(request,offset):
+    return render(request,'playinbuilt.html',{"playlistid":offset})
+
 
 
 def youtubesearch(request):
@@ -62,7 +65,7 @@ def playlists_view(request):
         closed =False
         if(i%4 == 0 ):
            ownsongdata = ownsongdata + '<div class = "row">'
-        ownsongdata  = ownsongdata +'<div class = "col-md-3 ">' + '<a href = "/insideplaylist/'+ str(data.id) +'"> <figure> <img class="albumart" src="'+data.albumart+'" alt= "albumart"><figcaption><h3>' + data.playlistname + '</h3></figcaption></figure></a></div>'
+        ownsongdata  = ownsongdata +'<div class = "col-md-3 ">' + '<a href = "/insideplaylist/'+ str(data.id) +'"> <figure> <img height="250" width="250" class="albumart" src="'+data.albumart+'" alt= "albumart"><figcaption><h3>' + data.playlistname + '</h3></figcaption></figure></a></div>'
         if(i%4 == 3 ):
             ownsongdata = ownsongdata + '</div><br>'
             closed = True
