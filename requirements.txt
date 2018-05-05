@@ -70,7 +70,6 @@ spotipy==2.4.4
 subprocess32==3.2.7
 texttable==0.8.1
 twitter==1.18.0
-unity-lens-photos==1.0
 uritemplate==3.0.0
 urllib3==1.13.1
 uWSGI==2.0.15
