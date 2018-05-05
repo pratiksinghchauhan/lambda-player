@@ -6,6 +6,7 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 
 
 DEVELOPER_KEY = 'AIzaSyDDMS-QHJhvX3_zjnQK4yFb6rxvtabfNw0'
@@ -13,9 +14,11 @@ YOUTUBE_API_SERVICE_NAME = 'youtube'
 YOUTUBE_API_VERSION = 'v3'
 
 # Create your views here.
+@login_required(login_url="/login/")
 def home(request):
     return render(request,'home.html')
 
+@login_required(login_url="/login/")
 def youtube_search(query,max_results):
     youtube = build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION,developerKey=DEVELOPER_KEY)
 
@@ -29,12 +32,12 @@ def youtube_search(query,max_results):
 
     return search_response
 
-
+@login_required(login_url="/login/")
 def playinbuiltplaylist(request,offset):
     return render(request,'playinbuilt.html',{"playlistid":offset})
 
 
-
+@login_required(login_url="/login/")
 def youtubesearch(request):
     if request.method == "POST":
         query = request.POST.get('q')
@@ -45,6 +48,7 @@ def youtubesearch(request):
         except HttpError, e:
             print 'An HTTP error %d occurred:\n%s' % (e.resp.status, e.content)
 
+@login_required(login_url="/login/")
 def ytplayer(request,offset):
     return render(request,'ytplayer.html',{"videoId":offset})
 
@@ -104,6 +108,7 @@ def showplaylistcontent(request,offset):
 
     return render(request,"showplaylistcontent.html", {"songs": songs, "playlistid":offset} )
 
+@login_required(login_url="/login/")
 def playaplaylist(request,offset):
     playlist = playlists.objects.get(id = offset)
     songs = playlistsongs.objects.filter(userdetails = request.user, playlist = playlist)
