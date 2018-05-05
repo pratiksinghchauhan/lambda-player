@@ -14,7 +14,6 @@ google-api-python-client==1.6.7
 graphviz==0.8
 greenlet==0.4.12
 gunicorn==18.0
-gyp==0.1
 html5lib==0.9999999
 http==0.2
 httplib2==0.10.3
