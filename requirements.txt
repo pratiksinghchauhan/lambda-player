@@ -52,14 +52,6 @@ pyodbc==4.0.17
 PyOpenGL==3.0.2
 pyOpenSSL==17.1.0
 pyparsing==2.2.0
-Pyrex==0.9.8.5
-pysolr==3.6.0
-pyspotify==2.0.5
-pytesseract==0.1.7
-python-dateutil==2.6.1
-python-openid==2.2.5
-pytz==2017.2
-PyYAML==3.11
 requests==2.13.0
 requests-oauthlib==0.8.0
 rsa==3.4.2
