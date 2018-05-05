@@ -1,1 +1,1 @@
-web: gunicorn lambda-player/lambda-player.wsgi --log-file -
+web: gunicorn lambda-player.wsgi --log-file -
