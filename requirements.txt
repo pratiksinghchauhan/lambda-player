@@ -68,7 +68,6 @@ social-auth-app-django==2.1.0
 social-auth-core==1.7.0
 spotipy==2.4.4
 subprocess32==3.2.7
-tensorflow==1.2.0
 texttable==0.8.1
 twitter==1.18.0
 unity-lens-photos==1.0
