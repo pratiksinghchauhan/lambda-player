@@ -32,7 +32,5 @@ urlpatterns = [
     url(r'^playlists/$', playlists_view),
     url(r'^insideplaylist/(.*)$', showplaylistcontent),
 
-    url(r'^admin/', admin.site.urls),
-
     url(r'^', home),
 ]
