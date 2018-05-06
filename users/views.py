@@ -82,7 +82,7 @@ def playlists_view(request):
     sharedplaylist = playlists.objects.filter(userdetails = request.user, playlisttype = "SHARED")
     sharedsongdata = ''
     i = 0
-    for data in ownplaylist:
+    for data in sharedplaylist:
         closed =False
         if(i%4 == 0 ):
            sharedsongdata = sharedsongdata + '<div class = "row">'
