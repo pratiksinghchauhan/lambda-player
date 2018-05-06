@@ -31,19 +31,36 @@
 
         <br>
 
-        <form method="POST" action="">
+        <form class="form-inline" method="POST" action="">
                 <p class="error-message">
                     {% if songerror %}
                         {{songerror}}
                     {% endif %}
                 </p>
 
-                {% csrf_token %}
+                {% csrf_token %}<p>
+                    <div class="form-group">
                 Add a new song:
-                <input placeholder="Youtube Video link:" type="url" name="newsong" class="form-control"><br>
-                <button type="submit" class="btn btn-success "><span class="glyphicon glyphicon-plus"></span>&nbspAdd</button>
+                <input placeholder="Search a Song:" type="text" name="newsong" class="form-control"><br>
+                </div>
+                <button type="submit" class="btn btn-success "><span class="glyphicon glyphicon-plus"></span>&nbspSearch</button></p>
         </form>
 
+        <ul class="list-group">
+        {% for res in results %}
+                <li class="list-group-item"> <a href="/playback/{{res.id.videoId}}"></a><img class="img-thumbnail searchimage"  src="{{res.snippet.thumbnails.high.url}}" alt="image" height="100" width="100">{{ res.snippet.title }} <br> {{ res.snippet.description }}
+                    <form method="POST" action="" name="addsong">
+                        {% csrf_token %}
+                        <input type="hidden" name="videoid" value="{{res.id.videoId}}">
+                        <input type="hidden" name="albumart" value="{{res.snippet.thumbnails.high.url}}">
+                        <input type="hidden" name="title" value="{{ res.snippet.title }}">
+                        <input type="hidden" name="playlistid" value="{{ playlistid }}">
+                        
+                    <div style="text-align: right; "><button type="submit" class="btn btn-success" >Add </button> </div>
+                    </form>
+                </li>
+        {% endfor %}
+    </ul>
 
 
         {% if message %}
@@ -51,6 +68,7 @@
             <h3>{{message}}</h3>
 
         {% endif %}
+{% if songs %}
 
         <h2> Playlist Content:
 
@@ -71,11 +89,40 @@
         <br>
 
         
-        
+    <div id="playlistsong">
         {% for song in songs %}
-            <li class="list-group-item"> <img class="img-thumbnail searchimage"  src="{{song.albumart}}" alt="image" height="100" width="100">{{ song.songname }} <br> {{ res.snippet.description }}</li>
+            <div  data-pk="{{ song.id }}" ><li class="list-group-item"> <img class="img-thumbnail searchimage"  src="{{song.albumart}}" alt="image" height="100" width="100">{{ song.songname }} <br> {{ res.snippet.description }}<p style="text-align: right;"><a href="/deletesong/{{playlistid}}/{{song.id}}">Delete</a></li></div>  
         {% endfor %}
-
+    </div>
+{% endif %}
 </div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+<script>
+    $("#playlistsong").sortable({
+    stop: function(event, ui) {
+        song_order = {};
+        $("#playlistsong").children().each(function(){
+        song_order[$(this).data('pk')] = $(this).index();
+        //console.log("song_order:")
+        //console.log(song_order)
+    });
+
+    console.log(song_order);
+
+    $.ajax({
+        
+        url: "{% url 'song_sorting' %}",
+        data: {
+				'value': JSON.stringify(song_order)
+		},
+        type: "post",
+        //contentType: 'application/json; charset= utf-8',
+        dataType: 'json',
+        //data: JSON.stringify(song_order),
+    });
+    }
+});
+</script>
 
 {% endblock %}

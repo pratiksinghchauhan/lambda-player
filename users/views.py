@@ -1,13 +1,15 @@
 from django.shortcuts import render
 import argparse
 from .models import playlists,playlistsongs
-
+import json
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-
+from django.http import HttpResponseRedirect
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
 
 DEVELOPER_KEY = 'AIzaSyDDMS-QHJhvX3_zjnQK4yFb6rxvtabfNw0'
 YOUTUBE_API_SERVICE_NAME = 'youtube'
@@ -109,14 +111,30 @@ def playlists_view(request):
 def showplaylistcontent(request,offset):
     sharedmessage = ''
     songerror = ''
+    results = ''
+    print request.method
+    if request.method == 'POST' and 'albumart' in request.POST:
+        print "heranfkmgasvkm"
+        videoId = request.POST.get('videoid')
+        albumArt = request.POST.get('albumart')
+        title = request.POST.get('title')
+        playlistid = request.POST.get('playlistid')
+        songaddto = playlists.objects.get(id = playlistid)
+        position = playlistsongs.objects.filter(userdetails=request.user, playlist = playlistid).count()
+        newEnty = playlistsongs(userdetails = request.user, playlist = songaddto, albumart = albumArt, songname = title ,videoid = videoId,position=position)
+        newEnty.save()
+
+        
+
     if request.method == 'POST' and 'newsong' in request.POST:
         newsong = request.POST.get("newsong")
         try:
             songaddto = playlists.objects.get(id = offset)
-            searchsong = youtube_search(newsong,1)
+            searchsong = youtube_search(newsong,5)
+            results = searchsong['items']
             print searchsong['items'][0]['id']['videoId']
-            newEnty = playlistsongs(userdetails = request.user, playlist = songaddto, url = newsong, albumart = searchsong['items'][0]['snippet']['thumbnails']['high']['url'], songname = searchsong['items'][0]['snippet']['title'] ,videoid = searchsong['items'][0]['id']['videoId'])
-            newEnty.save()
+            #newEnty = playlistsongs(userdetails = request.user, playlist = songaddto, url = newsong, albumart = searchsong['items'][0]['snippet']['thumbnails']['high']['url'], songname = searchsong['items'][0]['snippet']['title'] ,videoid = searchsong['items'][0]['id']['videoId'])
+            #newEnty.save()
         except:
             songerror = 'Song not found on url does not exist'
     
@@ -135,7 +153,7 @@ def showplaylistcontent(request,offset):
     songs = playlistsongs.objects.filter(userdetails = request.user, playlist = selectedplaylist)
 
 
-    return render(request,"showplaylistcontent.html", {"songs": songs, "playlistid":offset,"sharedmessage":sharedmessage, "songerror": songerror} )
+    return render(request,"showplaylistcontent.html", {"songs": songs, "playlistid":offset,"sharedmessage":sharedmessage, "songerror": songerror,"results" : results} )
 
 @login_required(login_url="/login/")
 def playaplaylist(request,offset):
@@ -156,3 +174,25 @@ def playaplaylist(request,offset):
     print videoId
     return render(request,"playlistplayer.html", {"songs": songs, "videoId":videoId, "firstvid":firstvid} )
 
+def deletesong(request,offset):
+
+    instance = playlistsongs.objects.get(id=offset.split('/')[1]).delete()
+    #instance.save()
+    return HttpResponseRedirect('/insideplaylist/'+offset.split('/')[0])
+
+
+@csrf_exempt
+def songsort(request):
+    value = request.POST.get('value')
+    print value
+    value = json.loads(value)
+    print type(value)
+    for key, val in value.iteritems():
+        print str(key)+ ":" + str(val)
+        playlistsongs.objects.filter(pk=key).update(position=val)
+        print "updated"
+
+    
+    #for pk, position in self.request_json.items():
+     #   playlistsongs.objects.filter(pk=pk).update(position=position)
+    return JsonResponse({'saved': 'OK'})

@@ -20,5 +20,8 @@ class playlistsongs(models.Model):
     albumart = models.CharField(max_length=200)
     songname = models.CharField(max_length=200)
     videoid = models.CharField(max_length=200)
+    position = models.IntegerField(default=0)
+    class Meta:
+        ordering = ['position', 'pk']
 
 

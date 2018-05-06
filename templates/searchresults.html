@@ -19,7 +19,7 @@
             {% endif %}
 
             {% for res in results %}
-                <a href="/playback/{{res.id.videoId}}"><li class="list-group-item"> <img class="img-thumbnail searchimage"  src="{{res.snippet.thumbnails.high.url}}" alt="image" height="100" width="100">{{ res.snippet.title }} <br> {{ res.snippet.description }}</li></a>
+                <a href="/playback/{{res.id.videoId}}"><li class="list-group-item"> <img class="img-thumbnail searchimage"  src="{{res.snippet.thumbnails.high.url}}" alt="image" height="100" width="100">{{ res.snippet.title }} <br> {{ res.snippet.description }} </li></a>
             {% endfor %}
 
         </ul>
