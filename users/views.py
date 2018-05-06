@@ -47,6 +47,8 @@ def youtubesearch(request):
             return render(request,'searchresults.html',{"results":searchRes['items'],"query":query})
         except HttpError, e:
             print 'An HTTP error %d occurred:\n%s' % (e.resp.status, e.content)
+    
+    return render(request,'searchresults.html',{"message":True})
 
 @login_required(login_url="/login/")
 def ytplayer(request,offset):
@@ -56,6 +58,9 @@ def playlists_view(request):
     if request.method == "POST":
         playlistName = request.POST.get("playlistname")
         albumArt = request.POST.get("albumart")
+
+        if not albumArt:
+            albumArt = "https://yt3.ggpht.com/pHwZj3tkgC3SJFbuqebBoT7WtVcIwAijEmcbe9VDCauv9ZlG6uS2zjvZQUSO7SfFqa3xjYqGp_L4QbM7=s900-mo-c-c0xffffffff-rj-k-no"
 
         print(request.user)
         newEnty = playlists(userdetails = request.user, playlistname = playlistName, albumart = albumArt)
@@ -98,32 +103,44 @@ def playlists_view(request):
 
 
 def showplaylistcontent(request,offset):
+    sharedmessage = ''
+    songerror = ''
     if request.method == 'POST' and 'newsong' in request.POST:
         newsong = request.POST.get("newsong")
-        songaddto = playlists.objects.get(id = offset)
-        searchsong = youtube_search(newsong,1)
-        print searchsong['items'][0]['id']['videoId']
-
-        newEnty = playlistsongs(userdetails = request.user, playlist = songaddto, url = newsong, albumart = searchsong['items'][0]['snippet']['thumbnails']['high']['url'], songname = searchsong['items'][0]['snippet']['title'] ,videoid = searchsong['items'][0]['id']['videoId'])
-        newEnty.save()
+        try:
+            songaddto = playlists.objects.get(id = offset)
+            searchsong = youtube_search(newsong,1)
+            print searchsong['items'][0]['id']['videoId']
+            newEnty = playlistsongs(userdetails = request.user, playlist = songaddto, url = newsong, albumart = searchsong['items'][0]['snippet']['thumbnails']['high']['url'], songname = searchsong['items'][0]['snippet']['title'] ,videoid = searchsong['items'][0]['id']['videoId'])
+            newEnty.save()
+        except:
+            songerror = 'Song not found on url does not exist'
     
     if request.method == 'POST' and 'shareduser' in request.POST:
         shareduser = request.POST.get('shareduser')
-        shareduserobj = User.objects.get(username = shareduser)
-        sharedplaylist = playlists.objects.get(id = offset)
-        newEnty = playlists(userdetails = request.user, playlistname = sharedplaylist.playlistname, albumart = sharedplaylist.albumart, playlisttype = 'SHARED')
-        newEnty.save()
-
+        try:
+            shareduserobj = User.objects.get(username = shareduser)
+            sharedplaylist = playlists.objects.get(id = offset)
+            newEnty = playlists(userdetails = request.user, playlistname = sharedplaylist.playlistname, albumart = sharedplaylist.albumart, playlisttype = 'SHARED')
+            newEnty.save()
+        except:
+            sharedmessage = 'Username does not exist!!'
+            
+    print sharedmessage
     selectedplaylist = playlists.objects.get(id = offset)    
     songs = playlistsongs.objects.filter(userdetails = request.user, playlist = selectedplaylist)
 
 
-    return render(request,"showplaylistcontent.html", {"songs": songs, "playlistid":offset} )
+    return render(request,"showplaylistcontent.html", {"songs": songs, "playlistid":offset,"sharedmessage":sharedmessage, "songerror": songerror} )
 
 @login_required(login_url="/login/")
 def playaplaylist(request,offset):
-    playlist = playlists.objects.get(id = offset)
+    offsetdata = offset.split('/')
+    playlist = playlists.objects.get(id = offset[0])
     songs = playlistsongs.objects.filter(userdetails = request.user, playlist = playlist)
+    if(offsetdata[1]=='shuffle=true'):
+        songs = songs.order_by('?')
+
     videoId = ''
     vidcount = 0
     for song in songs:

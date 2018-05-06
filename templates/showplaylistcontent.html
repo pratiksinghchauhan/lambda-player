@@ -6,11 +6,23 @@
         .playlist-creation-form{
             padding-top: 100px;
         }
+        .error-message{
+            text-align: center;
+            color: red;
+        }
 </style>
 
 <div class="container">
 
+
         <form method="POST" action="" class="playlist-creation-form">
+             
+            <p class="error-message">
+            {% if sharedmessage %}
+                {{sharedmessage}}
+            {% endif %}
+            </p>
+
             {% csrf_token %}
             Share this playlist with:
             <input placeholder="Please enter a correct username" type="text" name="shareduser" class="form-control"><br>
@@ -20,9 +32,15 @@
         <br>
 
         <form method="POST" action="">
+                <p class="error-message">
+                    {% if songerror %}
+                        {{songerror}}
+                    {% endif %}
+                </p>
+
                 {% csrf_token %}
                 Add a new song:
-                <input placeholder="Youtube Video link:" type="text" name="newsong" class="form-control"><br>
+                <input placeholder="Youtube Video link:" type="url" name="newsong" class="form-control"><br>
                 <button type="submit" class="btn btn-success "><span class="glyphicon glyphicon-plus"></span>&nbspAdd</button>
         </form>
 
@@ -37,11 +55,17 @@
         <h2> Playlist Content:
 
         
-       <a href="/play/{{playlistid}}">
+       <a href="/play/{{playlistid}}/shuffle=false">
         <button type="button" class="btn btn-default">
             <span class="glyphicon glyphicon-play-circle"></span> Play
           </button>
         </a>
+
+        <a href="/play/{{playlistid}}/shuffle=true">
+            <button type="button" class="btn btn-default">
+                <span class="glyphicon  glyphicon-random"></span> Shuffle
+              </button>
+            </a>
         </h2>
 
         <br>

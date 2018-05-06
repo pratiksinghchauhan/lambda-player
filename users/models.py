@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 class playlists(models.Model):
     userdetails = models.ForeignKey(User,on_delete=models.DO_NOTHING,)
     playlistname = models.CharField(max_length=200)
-    albumart = models.CharField(max_length=200)
+    albumart = models.CharField(max_length=200,default="https://yt3.ggpht.com/pHwZj3tkgC3SJFbuqebBoT7WtVcIwAijEmcbe9VDCauv9ZlG6uS2zjvZQUSO7SfFqa3xjYqGp_L4QbM7=s900-mo-c-c0xffffffff-rj-k-no")
     playlisttype = models.CharField(max_length=200,default = "CREATED")
     ts = models.DateTimeField(auto_now_add=True)
     def __str__(self):
