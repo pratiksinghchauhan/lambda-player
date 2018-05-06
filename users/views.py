@@ -55,16 +55,18 @@ def ytplayer(request,offset):
     return render(request,'ytplayer.html',{"videoId":offset})
 
 def playlists_view(request):
+    errormessage = ''
     if request.method == "POST":
         playlistName = request.POST.get("playlistname")
         albumArt = request.POST.get("albumart")
 
-        if not albumArt:
-            albumArt = "https://yt3.ggpht.com/pHwZj3tkgC3SJFbuqebBoT7WtVcIwAijEmcbe9VDCauv9ZlG6uS2zjvZQUSO7SfFqa3xjYqGp_L4QbM7=s900-mo-c-c0xffffffff-rj-k-no"
-
-        print(request.user)
-        newEnty = playlists(userdetails = request.user, playlistname = playlistName, albumart = albumArt)
-        newEnty.save()
+        if not playlistName:
+            errormessage = "having a playlist name is compulsary"
+            if not albumArt:
+                albumArt = "https://yt3.ggpht.com/pHwZj3tkgC3SJFbuqebBoT7WtVcIwAijEmcbe9VDCauv9ZlG6uS2zjvZQUSO7SfFqa3xjYqGp_L4QbM7=s900-mo-c-c0xffffffff-rj-k-no"
+            print(request.user)
+            newEnty = playlists(userdetails = request.user, playlistname = playlistName, albumart = albumArt)
+            newEnty.save()
     
     ownplaylist = playlists.objects.filter(userdetails = request.user, playlisttype = "CREATED")
     print ownplaylist
@@ -99,7 +101,7 @@ def playlists_view(request):
     if sharedsongdata != '' and  not closed:
         sharedsongdata = sharedsongdata + '</div><br>'
     
-    return render(request,'viewplaylists.html',{"ownplaylists":ownsongdata, "sharedplaylists": sharedsongdata})
+    return render(request,'viewplaylists.html',{"ownplaylists":ownsongdata, "sharedplaylists": sharedsongdata, "errormessage":errormessage})
 
 
 def showplaylistcontent(request,offset):
