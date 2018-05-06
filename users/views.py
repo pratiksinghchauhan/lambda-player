@@ -161,6 +161,7 @@ def playaplaylist(request,offset):
     offsetdata = offset.split('/')
     playlist = playlists.objects.get(id = offset[0])
     songs = playlistsongs.objects.filter(userdetails = request.user, playlist = playlist)
+    print songs
     if(offsetdata[1]=='shuffle=true'):
         songs = songs.order_by('?')
 
