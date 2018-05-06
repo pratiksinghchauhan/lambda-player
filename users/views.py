@@ -166,6 +166,7 @@ def playaplaylist(request,offset):
         songs = songs.order_by('?')
 
     videoId = ''
+    firstvid = ''
     vidcount = 0
     for song in songs:
         if vidcount == 0:
