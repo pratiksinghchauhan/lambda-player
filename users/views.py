@@ -62,6 +62,7 @@ def playlists_view(request):
 
         if not playlistName:
             errormessage = "having a playlist name is compulsary"
+        else:
             if not albumArt:
                 albumArt = "https://yt3.ggpht.com/pHwZj3tkgC3SJFbuqebBoT7WtVcIwAijEmcbe9VDCauv9ZlG6uS2zjvZQUSO7SfFqa3xjYqGp_L4QbM7=s900-mo-c-c0xffffffff-rj-k-no"
             print(request.user)
