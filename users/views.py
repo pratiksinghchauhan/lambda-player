@@ -54,6 +54,7 @@ def youtubesearch(request):
 def ytplayer(request,offset):
     return render(request,'ytplayer.html',{"videoId":offset})
 
+@login_required(login_url="/login/")
 def playlists_view(request):
     errormessage = ''
     if request.method == "POST":
@@ -104,7 +105,7 @@ def playlists_view(request):
     
     return render(request,'viewplaylists.html',{"ownplaylists":ownsongdata, "sharedplaylists": sharedsongdata, "errormessage":errormessage})
 
-
+@login_required(login_url="/login/")
 def showplaylistcontent(request,offset):
     sharedmessage = ''
     songerror = ''
