@@ -6,66 +6,39 @@
           .ytplayer{
             padding-top: 90px;
           }
+          .embed-responsive {
+          position: relative;
+          display: block;
+          height: 0;
+          padding: 0;
+          overflow: hidden;
+        }
+        .embed-responsive .embed-responsive-item,
+        .embed-responsive iframe,
+        .embed-responsive embed,
+        .embed-responsive object,
+        .embed-responsive video {
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          left: 0;
+          width: 100%;
+          height: 90%;
+          border: 0;
+        }
+        .embed-responsive-16by9 {
+          padding-bottom: 56.25%;
+        }
+        .embed-responsive-4by3 {
+          padding-bottom: 75%;
+        }
       </style>
 
-       <div class="container ytplayer">
-            <div id="player"></div>
+       <div class="embed-responsive embed-responsive-16by9  container ytplayer">
+            <iframe 
+            src="https://www.youtube.com/embed/{{videoId}}?autoplay=1">
+            </iframe> 
         </div>
 
-
-        <script>
-            var vid = "{{videoId|safe}}";
-            console.log(typeof(vid));
-
-            vid = vid.replace("u'", "'");
-            var videoId = vid.split(",");
-            console.log(typeof(videoId));
-            console.log("VideoId: \n");
-            
-            var firstvid = videoId[0];
-            videoId.shift();
-            videoId.pop();
-            console.log(videoId);
-
-            var tag = document.createElement('script');
-            tag.src = "http://www.youtube.com/player_api";
-            var firstScriptTag = document.getElementsByTagName('script')[0];
-            firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-            var done = false;
-            var player;
-            var player;
-            function onYouTubePlayerAPIReady() {
-            player = new YT.Player('player', {
-            height: '390',
-            width: '640',
-            videoId: firstvid,
-            playerVars: { 'autoplay': 1, 'controls': 1, 'playlist':videoId},
-            events: {
-                'onReady': onPlayerReady,
-                'onStateChange': onPlayerStateChange
-            }
-            });
-            }
-            function onPlayerReady(evt) {
-                evt.target.playVideo();
-            }
-            function onPlayerStateChange(evt) {
-                /*if (evt.data == YT.PlayerState.PLAYING && !done) {
-                    setTimeout(stopVideo, 6000);
-                    done = true;
-                }*/
-            }
-            function stopVideo() {
-                player.stopVideo();
-            }
-            
-            function loadVideo(videoID) {
-              console.log(videoID);
-              if(player) { player.loadVideoById(videoID); }
-            }
-            
-            
-        </script>
-            
 
 {% endblock %}

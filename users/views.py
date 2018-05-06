@@ -157,6 +157,7 @@ def showplaylistcontent(request,offset):
 
 @login_required(login_url="/login/")
 def playaplaylist(request,offset):
+    vidcount = 0
     offsetdata = offset.split('/')
     playlist = playlists.objects.get(id = offset[0])
     songs = playlistsongs.objects.filter(userdetails = request.user, playlist = playlist)
@@ -164,7 +165,6 @@ def playaplaylist(request,offset):
         songs = songs.order_by('?')
 
     videoId = ''
-    vidcount = 0
     for song in songs:
         if vidcount==0:
             firstvid = song.videoid
