@@ -18,7 +18,6 @@ YOUTUBE_API_VERSION = 'v3'
 def home(request):
     return render(request,'home.html')
 
-@login_required(login_url="/login/")
 def youtube_search(query,max_results):
     youtube = build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION,developerKey=DEVELOPER_KEY)
 
@@ -29,7 +28,6 @@ def youtube_search(query,max_results):
         part='id,snippet',
         maxResults=max_results
     ).execute()
-
     return search_response
 
 @login_required(login_url="/login/")
@@ -41,8 +39,10 @@ def playinbuiltplaylist(request,offset):
 def youtubesearch(request):
     if request.method == "POST":
         query = request.POST.get('q')
+        print request.user
         try:
             searchRes = youtube_search(query,10)
+            print searchRes
             print searchRes['items'][0]
             return render(request,'searchresults.html',{"results":searchRes['items'],"query":query})
         except HttpError, e:
