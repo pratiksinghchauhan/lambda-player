@@ -80,9 +80,21 @@ def playlists_view(request):
     print ownsongdata
 
     sharedplaylist = playlists.objects.filter(userdetails = request.user, playlisttype = "SHARED")
-  
-
-    return render(request,'viewplaylists.html',{"ownplaylists":ownsongdata, "sharedplaylists": sharedplaylist})
+    sharedsongdata = ''
+    i = 0
+    for data in ownplaylist:
+        closed =False
+        if(i%4 == 0 ):
+           sharedsongdata = sharedsongdata + '<div class = "row">'
+        sharedsongdata  = sharedsongdata +'<div class = "col-md-3 ">' + '<a href = "/insideplaylist/'+ str(data.id) +'"> <figure> <img height="250" width="250" class="albumart" src="'+data.albumart+'" alt= "albumart"><figcaption><h3>' + data.playlistname + '</h3></figcaption></figure></a></div>'
+        if(i%4 == 3 ):
+            sharedsongdata = sharedsongdata + '</div><br>'
+            closed = True
+        i = i+1
+    if sharedsongdata != '' and  not closed:
+        sharedsongdata = sharedsongdata + '</div><br>'
+    
+    return render(request,'viewplaylists.html',{"ownplaylists":ownsongdata, "sharedplaylists": sharedsongdata})
 
 
 def showplaylistcontent(request,offset):
@@ -113,8 +125,13 @@ def playaplaylist(request,offset):
     playlist = playlists.objects.get(id = offset)
     songs = playlistsongs.objects.filter(userdetails = request.user, playlist = playlist)
     videoId = ''
+    vidcount = 0
     for song in songs:
-        videoId = videoId + song.videoid + ','
+        if vidcount==0:
+            firstvid = song.videoid
+        else:
+            videoId = videoId + song.videoid + ','
+        vidcount = 1
     print videoId
-    return render(request,"ytplayer.html", {"songs": songs, "videoId":videoId} )
+    return render(request,"playlistplayer.html", {"songs": songs, "videoId":videoId, "firstvid":firstvid} )
 

@@ -29,7 +29,6 @@
         
             <div id="ownplaylists">
                 {{ownplaylists|safe}}
-
             </div>
            
     {% else %}
@@ -39,9 +38,9 @@
     <h2> Shared Playlists: </h2>
     
     {% if sharedplaylists %}
-        {% for sharedsongs in sharedplaylists %}
-            {{ sharedsongs }}
-        {% endfor %}
+    <div id="sharedplaylists">
+            {{sharedplaylists|safe}}
+    </div>
     
     {% else %}
         <p style="text-align: center"> No Playlists has been shared with you</p>

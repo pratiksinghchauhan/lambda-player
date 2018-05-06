@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+      <style>
+          .ytplayer{
+            padding-top: 90px;
+          }
+      </style>
+
+       <div class="container ytplayer">
+            <iframe width="720" height="405" src="https://www.youtube.com/embed/{{firstvid}}?playlist={{videoId}}"frameborder="0" allowfullscreen></iframe>
+            <div id="player"></div>
+        </div>
+
+{% endblock %}
