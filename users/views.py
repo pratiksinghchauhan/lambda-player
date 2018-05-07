@@ -159,7 +159,7 @@ def showplaylistcontent(request,offset):
 def playaplaylist(request,offset):
     
     offsetdata = offset.split('/')
-    playlist = playlists.objects.get(id = offset[0])
+    playlist = playlists.objects.get(id = offsetdata[0])
     songs = playlistsongs.objects.filter(userdetails = request.user, playlist = playlist)
     print songs
     if(offsetdata[1]=='shuffle=true'):
